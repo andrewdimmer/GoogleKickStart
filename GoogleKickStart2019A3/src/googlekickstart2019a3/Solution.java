@@ -5,6 +5,15 @@
  */
 package googlekickstart2019a3;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Andrew
@@ -13,7 +22,7 @@ public class Solution {
 
     public static Scanner determineInput() {
         try {
-            return new Scanner(new FileReader("input/tests.txt"));
+            return new Scanner(new FileReader("input/tests2.txt"));
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Solution.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -65,7 +74,9 @@ public class Solution {
                         k2 = b[1] - hiLow[1];
                         hiLow[1] = b[1];
                     }
-                    k = k1 + k2;
+                    if (k1 + k2 < k) {
+                        k = k1 + k2;
+                    }
                     // System.out.println(k + " = " + k1 + " + " + k2);
                 } else {
                     k = 0;
