@@ -1,0 +1,78 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package googlekickstart2019a3;
+
+/**
+ *
+ * @author Andrew
+ */
+public class Solution {
+
+    public static Scanner determineInput() {
+        try {
+            return new Scanner(new FileReader("input/tests.txt"));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Solution.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return new Scanner(System.in);
+    }
+    
+    private static class comparator implements Comparator<int[]> {
+        @Override
+        public int compare(int[] b1, int[] b2) {
+            if (b1[1] != b2[1]) {
+                return b1[1] - b2[1];
+            } else {
+                return b2[0] - b1[0];
+            }
+        }
+    }
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        // TODO code application logic here
+        Scanner input = determineInput();
+        int t = input.nextInt();
+        for (int i = 0; i < t; i++) {
+            int n = input.nextInt();
+            int q = input.nextInt();
+            ArrayList<int[]> bookings = new ArrayList<>();
+            for (int j = 0; j < q; j++) {
+                int[] b = new int[2];
+                b[0] = input.nextInt();
+                b[1] = input.nextInt();
+                bookings.add(b);
+            }
+            Collections.sort(bookings, new comparator());
+            int[] hiLow = bookings.remove(0);
+            // System.out.println("[" + hiLow[0] + "," + hiLow[1] + "]");
+            int k = hiLow[1] - hiLow[0] +1;
+            // System.out.println(k);
+            for (int[] b : bookings) {
+                // System.out.println("[" + b[0] + "," + b[1] + "]");
+                if (b[0] < hiLow[0] || b[1] > hiLow[1]) {
+                    int k1 = 0, k2 = 0;
+                    if (b[0] < hiLow[0]) {
+                        k1 = hiLow[0] - b[0];
+                        hiLow[0] = b[0];
+                    }
+                    if (b[1] > hiLow[1]) {
+                        k2 = b[1] - hiLow[1];
+                        hiLow[1] = b[1];
+                    }
+                    k = k1 + k2;
+                    // System.out.println(k + " = " + k1 + " + " + k2);
+                } else {
+                    k = 0;
+                    break;
+                }
+            }
+            System.out.println("Case #" + (i+1) + ": " + k);
+        }
+    }
+}
