@@ -57,31 +57,65 @@ public class Solution {
                 b[1] = input.nextInt();
                 bookings.add(b);
             }
-            Collections.sort(bookings, new comparator());
-            int[] hiLow = bookings.remove(0);
-            // System.out.println("[" + hiLow[0] + "," + hiLow[1] + "]");
-            int k = hiLow[1] - hiLow[0] +1;
+            Comparator sorter = new comparator();
+            Collections.sort(bookings, sorter);
+            ArrayList<int[]> booked = new ArrayList<>();
+            booked.add(bookings.remove(0));
+            // System.out.println("[" + booked.get(0)[0] + "," + booked.get(0)[1] + "]");
+            int k = booked.get(0)[1] - booked.get(0)[0] +1;
             // System.out.println(k);
             for (int[] b : bookings) {
                 // System.out.println("[" + b[0] + "," + b[1] + "]");
-                if (b[0] < hiLow[0] || b[1] > hiLow[1]) {
-                    int k1 = 0, k2 = 0;
-                    if (b[0] < hiLow[0]) {
-                        k1 = hiLow[0] - b[0];
-                        hiLow[0] = b[0];
+                int kmax = b[1] - b[0] + 1;
+                int newL = b[0], newR = b[1];
+                for (int rangeNumber = 0; rangeNumber < booked.size(); rangeNumber++) {
+                    int[] range = booked.get(rangeNumber);
+                    // System.out.println("--> [" + range[0] + "," + range[1] + "]");
+                    if (range[1] >= b[0]) {
+                        if (range[0] >= b[0]) {
+                            kmax -= range[1] - range[0] + 1;
+                            // System.out.println("Match 1.1");
+                            booked.remove(range);
+                            rangeNumber--;
+                        } else {
+                            kmax -= range[1] - b[0] + 1;
+                            newL = range[0];
+                            // System.out.println("Match 1.2");
+                            booked.remove(range);
+                            rangeNumber--;
+                        }
+                    } else if (range[0] <= b[1]) {
+                        if (range[0] >= b[0]) {
+                            kmax -= range[1] - range[0] + 1;
+                            // System.out.println("Match 2.1");
+                            booked.remove(range);
+                            rangeNumber--;
+                        } else if (range[1] >= b[0]) {
+                            kmax -= b[1] - range[0] + 1;
+                            newR = range[1];
+                            // System.out.println("Match 2.2");
+                            booked.remove(range);
+                            rangeNumber--;
+                        }
+                    } else if (range[0] < b[1]) {
+                        // System.out.println("Match Break");
+                        break;
                     }
-                    if (b[1] > hiLow[1]) {
-                        k2 = b[1] - hiLow[1];
-                        hiLow[1] = b[1];
+                    if (kmax == 0) {
+                        k = 0;
+                        break;
                     }
-                    if (k1 + k2 < k) {
-                        k = k1 + k2;
-                    }
-                    // System.out.println(k + " = " + k1 + " + " + k2);
-                } else {
-                    k = 0;
-                    break;
                 }
+                if (k == 0) {
+                    break;
+                } else if (kmax < k) {
+                    k = kmax;
+                }
+                booked.add(new int[]{newL, newR});
+                Collections.sort(booked, sorter);
+                /*for(int[] bn : booked) {
+                    System.out.println("\t[" + bn[0] + "," + bn[1] + "]");
+                }*/
             }
             System.out.println("Case #" + (i+1) + ": " + k);
         }
