@@ -29,8 +29,8 @@ public class Solution {
         return new Scanner(System.in);
     }
     
-    private static int getCost(int[] spots, int[] costs, int numberOfStalls) {
-        int minCost = Integer.MAX_VALUE;
+    private static long getCost(int[] spots, int[] costs, int numberOfStalls) {
+        long minCost = Long.MAX_VALUE;
         for (int j = 0; j < spots.length; j++) {
             int[] modCosts = new int[spots.length - 1];
             for (int i = 0; i < j; i++) {
@@ -40,7 +40,7 @@ public class Solution {
                 modCosts[i - 1] = costs[i] + Math.abs(spots[j] - spots[i]);
             }
             Arrays.sort(modCosts);
-            int currentCost = costs[j];
+            long currentCost = costs[j];
             for (int i = 0; i < numberOfStalls; i++) {
                 currentCost += modCosts[i];
             }
